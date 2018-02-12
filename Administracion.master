@@ -142,7 +142,7 @@
                                 <li>
                                     <asp:LinkButton runat="server" ID="lnkNotificaciones" OnClick="lnkNotificaciones_Click">Notificaciones</asp:LinkButton></li>
                                 <li>
-                                    <asp:LinkButton runat="server" ID="lnkTraspasos" OnClick="lnkNotificaciones_Click">Traspaso entre Tiendas</asp:LinkButton></li>
+                                    <asp:LinkButton runat="server" ID="lnkTraspasos" OnClick="lnkTraspasos_Click">Traspaso entre Tiendas</asp:LinkButton></li>
                             </ul>
                         </li>
                         <li class="dropdown">

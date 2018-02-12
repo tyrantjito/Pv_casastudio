@@ -63,7 +63,7 @@ public partial class Administracion : System.Web.UI.MasterPage
         LinkButton[] opciones = { lnkAdmon, lnkCatalogos, lnkEntradas, lnkConsulInv, lnkConsultas, lnkReportes, lnkVenta,
                                 lnkcatUsu, lnkUsuPer,lnkEmpresas,lnkUnidades,lnkFamilias,lnkLineas,lnkIslas,lnkUsuIsla,
                                 lnkUsuFact,lnkProvee,lnkProductos,lnkPlantilla,lnkConsulOrden,lnkConsulVenta,lnkConsulGastos,
-                                lnkConsulPendientes,lnkNotificaciones,lnkEnvio,lnkAcumulado,lnkCortes,lnkPersonal,not};
+                                lnkConsulPendientes,lnkNotificaciones,lnkTraspasos,lnkEnvio,lnkAcumulado,lnkCortes,lnkPersonal,not};
         for (int i = 0; i < permisos.Length; i++) {
             if (i < 28)
                 opciones[i].Visible = permisos[i];
@@ -226,5 +226,9 @@ public partial class Administracion : System.Web.UI.MasterPage
     protected void lnkConsultaAjuste_Click(object sender, EventArgs e)
     {
         Response.Redirect("ConsultarAjuste.aspx?u=" + usuario + "&nu=" + nombre);
+    }
+
+    protected void lnkTraspasos_Click(object sender, EventArgs e) {
+        Response.Redirect("Traspaso_Tiendas.aspx?u=" + usuario + "&nu=" + nombre);
     }
 }
