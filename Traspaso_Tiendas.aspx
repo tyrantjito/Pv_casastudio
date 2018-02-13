@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="row marTop">
-            <div class="col-lg-12 col-sm-12 center">            
+            <div class="col-lg-12 col-sm-12 center">
                 <div class="col-lg-5 col-sm-5 center">
                     <asp:Label ID="Label8" runat="server" Text="Tienda Origen:" />
                     <asp:DropDownList ID="ddlIslas" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource2"
@@ -40,15 +40,12 @@
                 </div>
                 <%-- Buscar Productos --%>
                 <div class="col-lg-5 col-sm-5 center">
-                    <asp:Label ID="Label1" runat="server" Text="Producto:" />
+                    <asp:Label ID="Label1" runat="server" Text="Buscar Producto:" />
                     <asp:TextBox ID="txtFiltroArticulo" runat="server" Height="30px" OnTextChanged="txtFiltroArticulo_TextChanged" AutoPostBack="true" placeholder="Buscar Producto" />
                     <ajaxToolkit:AutoCompleteExtender runat="server" ServiceMethod="obtieneProductos" 
                         BehaviorID="txtFiltroArticulo_AutoCompleteExtender" TargetControlID="txtFiltroArticulo" 
                         ID="txtFiltroArticulo_AutoCompleteExtender" Enabled="true" UseContextKey="true" 
                         MinimumPrefixLength="1" CompletionInterval="10" CompletionSetCount="10"/>
-                </div>
-                <div class="col-lg-2 col-sm-2 center">
-                    <asp:LinkButton runat="server" CssClass="btn btn-info" OnClick="lnkImprime_Click" ID="lnkImprime"><i class="icon-pint"></i><span>Imprimir</span></asp:LinkButton>
                 </div>
             </div>
         </div>
