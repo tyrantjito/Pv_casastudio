@@ -81,6 +81,7 @@ public partial class Traspaso_Tiendas : System.Web.UI.Page
         SqlConnection conexionBD = new SqlConnection(ConfigurationManager.ConnectionStrings["PVW"].ToString());
         try
         {
+            lblError.Text = "";
             conexionBD.Open();
             SqlCommand cmd1 = new SqlCommand("select cantidadExistencia from articulosalmacen where idArticulo='"+idArticulo+"' and idalmacen='"+idIslaOrigen+"'", conexionBD);
             SqlCommand cmd2 = new SqlCommand("select cantidadExistencia from articulosalmacen where idArticulo='" + idArticulo + "' and idalmacen='" + idIslaDestino + "'", conexionBD);
@@ -113,19 +114,18 @@ public partial class Traspaso_Tiendas : System.Web.UI.Page
                 ActualizarOrigen.ExecuteNonQuery();
                 ActualizarDestino.ExecuteNonQuery();
                 conexionBD.Close();
-                lblError.Text = "Traspaso con existo";
+                lblError.Text = "Traspaso con Exito";
+                e.Cancel = true;
+                GridInvetarioProductos.EditIndex = -1;
+                cargaDatos();
             }
             else
-                lblError.Text = "La tienda Destino no puede ser igual a la de Destino";            
+                lblError.Text = "La tienda Destino no puede ser igual a la de Origen";
         }
         catch (Exception) { lblError.Text = "Ingrese la cantidad a traspasar sin numeros decimales"; }
-        cargaDatos();
     }
 
-    private static string ReadSingleRow(IDataRecord record)
-    {
-        return String.Format("{0}", record[0]);
-    }
+    private static string ReadSingleRow(IDataRecord record){ return String.Format("{0}", record[0]); }
 
 
     protected void GridInvetarioProductos_RowUpdating(object sender, GridViewUpdateEventArgs e)
