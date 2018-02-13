@@ -73,36 +73,53 @@ public partial class Traspaso_Tiendas : System.Web.UI.Page
     }
 
     protected void GridTraspasar(object sender, GridViewUpdateEventArgs e){
-        string idIsla = e.Keys[0].ToString();
+        string idIslaOrigen = e.Keys[0].ToString();
+        string idIslaDestino = ddlIslasDestino.Text;
         string idArticulo = e.Keys[1].ToString();
         string ExisOrigin="";
+        string ExisDestino = "";
         SqlConnection conexionBD = new SqlConnection(ConfigurationManager.ConnectionStrings["PVW"].ToString());
         try
         {
             conexionBD.Open();
-            SqlCommand cmd = new SqlCommand("select cantidadExistencia from articulosalmacen where idArticulo='"+idArticulo+"' and idalmacen='"+idIsla+"'", conexionBD);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqlCommand cmd1 = new SqlCommand("select cantidadExistencia from articulosalmacen where idArticulo='"+idArticulo+"' and idalmacen='"+idIslaOrigen+"'", conexionBD);
+            SqlCommand cmd2 = new SqlCommand("select cantidadExistencia from articulosalmacen where idArticulo='" + idArticulo + "' and idalmacen='" + idIslaDestino + "'", conexionBD);
+            SqlDataAdapter da1 = new SqlDataAdapter(cmd1);
+            SqlDataReader reader1 = cmd1.ExecuteReader();
 
-            while (reader.Read())
-            {
-                //ReadSingleRow((IDataRecord)reader);
-                ExisOrigin= ReadSingleRow((IDataRecord)reader);
+            while (reader1.Read()) ExisOrigin = ReadSingleRow((IDataRecord)reader1);
+            reader1.Close();
+
+            SqlDataAdapter da2 = new SqlDataAdapter(cmd2);
+            SqlDataReader reader2 = cmd2.ExecuteReader();
+
+            while (reader2.Read())  ExisDestino = ReadSingleRow((IDataRecord)reader2);
+            reader2.Close();
+
+            conexionBD.Close();
+
+            int existenciaOrigen =Convert.ToInt32(decimal.Parse(ExisOrigin));
+            int existenciaDestino = Convert.ToInt32(decimal.Parse(ExisDestino));
+            int CantidadATraspasar = Convert.ToInt16((GridInvetarioProductos.Rows[e.RowIndex].FindControl("txtCantidadProductos") as TextBox).Text);
+
+            if (CantidadATraspasar > existenciaOrigen)
+                lblError.Text = "No tienes suficientes Productos para realizar este Proceso";
+            else if ((CantidadATraspasar <= existenciaOrigen) && (idIslaOrigen != idIslaDestino)){
+                conexionBD.Open();
+                int stockOrigen = existenciaOrigen - CantidadATraspasar;
+                int stockDestino = existenciaDestino + CantidadATraspasar;
+                SqlCommand ActualizarOrigen = new SqlCommand("update articulosalmacen set cantidadExistencia='" + stockOrigen + "' where idArticulo='" + idArticulo + "' and idalmacen='" + idIslaOrigen + "'", conexionBD);
+                SqlCommand ActualizarDestino = new SqlCommand("update articulosalmacen set cantidadExistencia='" + stockDestino + "' where idArticulo='" + idArticulo + "' and idalmacen='" + idIslaDestino + "'", conexionBD);
+                ActualizarOrigen.ExecuteNonQuery();
+                ActualizarDestino.ExecuteNonQuery();
+                conexionBD.Close();
+                lblError.Text = "Traspaso con existo";
             }
-
-
-            // Call Close when done reading.
-            reader.Close();
-
+            else
+                lblError.Text = "La tienda Destino no puede ser igual a la de Destino";            
         }
-        catch (Exception) { }
-
-        int existenciaOriginal = Convert.ToInt16(ExisOrigin[0]);
-            
-        //TextBox txtTraspaso = GridInvetarioProductos.Rows[e.RowIndex].FindControl("txtCantidadProductos") as TextBox;
-        int Traspasar = Convert.ToInt16((GridInvetarioProductos.Rows[e.RowIndex].FindControl("txtCantidadProductos") as TextBox).Text);
-
-
+        catch (Exception) { lblError.Text = "Ingrese la cantidad a traspasar sin numeros decimales"; }
+        cargaDatos();
     }
 
     private static string ReadSingleRow(IDataRecord record)

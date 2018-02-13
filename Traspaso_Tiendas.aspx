@@ -15,7 +15,7 @@
         <div class="row marTop">
             <div class="col-lg-12 col-sm-12 center">            
                 <div class="col-lg-5 col-sm-5 center">
-                    <asp:Label ID="Label8" runat="server" Text="Tiendas:" />
+                    <asp:Label ID="Label8" runat="server" Text="Tienda Origen:" />
                     <asp:DropDownList ID="ddlIslas" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource2"
                         DataTextField="nombre" DataValueField="idAlmacen" OnSelectedIndexChanged="ddlIslas_SelectedIndexChanged"
                         CssClass="dropdown">
@@ -26,6 +26,19 @@
                         </SelectParameters>
                     </asp:SqlDataSource>
                 </div>
+                <%--  Lista de destinos  --%>
+                <div class="col-lg-5 col-sm-5 center">
+                    <asp:Label ID="Label3" runat="server" Text="Tienda Destino:" />
+                    <asp:DropDownList ID="ddlIslasDestino" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource2"
+                        DataTextField="nombre" DataValueField="idAlmacen" CssClass="dropdown">
+                    </asp:DropDownList>
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:PVW %>' SelectCommand="select u.id_punto as idAlmacen,p.nombre_pv as nombre from usuario_puntoventa U inner join punto_venta p on p.id_punto=u.id_punto where U.usuario=@usuario and U.estatus='A'">
+                        <SelectParameters>
+                            <asp:QueryStringParameter Name="usuario" QueryStringField="u" />
+                        </SelectParameters>
+                    </asp:SqlDataSource>
+                </div>
+                <%-- Buscar Productos --%>
                 <div class="col-lg-5 col-sm-5 center">
                     <asp:Label ID="Label1" runat="server" Text="Producto:" />
                     <asp:TextBox ID="txtFiltroArticulo" runat="server" Height="30px" OnTextChanged="txtFiltroArticulo_TextChanged" AutoPostBack="true" placeholder="Buscar Producto" />
@@ -146,7 +159,7 @@
                                         </asp:TemplateField>
                                         <asp:TemplateField ShowHeader="False" ItemStyle-CssClass="text-center">
                                             <EditItemTemplate>
-                                                <asp:Button runat="server" Text="Actualizar" CssClass="btn-success" CommandArgument='<%# Eval("idsAlmaArt") %>' CommandName="Update" CausesValidation="True" ID="Button1"></asp:Button>&nbsp;
+                                                <asp:Button runat="server" Text="Traspasar" CssClass="btn-success" CommandArgument='<%# Eval("idsAlmaArt") %>' CommandName="Update" CausesValidation="True" ID="Button1"></asp:Button>&nbsp;
                                                 <asp:Button runat="server" Text="Cancelar" CssClass="btn-danger" CommandName="Cancel" CausesValidation="False" ID="Button2"></asp:Button>
                                             </EditItemTemplate>
                                             <ItemTemplate>
