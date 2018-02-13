@@ -75,12 +75,39 @@ public partial class Traspaso_Tiendas : System.Web.UI.Page
     protected void GridTraspasar(object sender, GridViewUpdateEventArgs e){
         string idIsla = e.Keys[0].ToString();
         string idArticulo = e.Keys[1].ToString();
-        int existenciaOriginal = Convert.ToInt16((GridInvetarioProductos.Rows[e.RowIndex].FindControl("txtCantidadProductos") as TextBox).Text);
+        string ExisOrigin="";
+        SqlConnection conexionBD = new SqlConnection(ConfigurationManager.ConnectionStrings["PVW"].ToString());
+        try
+        {
+            conexionBD.Open();
+            SqlCommand cmd = new SqlCommand("select cantidadExistencia from articulosalmacen where idArticulo='"+idArticulo+"' and idalmacen='"+idIsla+"'", conexionBD);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                //ReadSingleRow((IDataRecord)reader);
+                ExisOrigin= ReadSingleRow((IDataRecord)reader);
+            }
+
+
+            // Call Close when done reading.
+            reader.Close();
+
+        }
+        catch (Exception) { }
+
+        int existenciaOriginal = Convert.ToInt16(ExisOrigin[0]);
             
         //TextBox txtTraspaso = GridInvetarioProductos.Rows[e.RowIndex].FindControl("txtCantidadProductos") as TextBox;
         int Traspasar = Convert.ToInt16((GridInvetarioProductos.Rows[e.RowIndex].FindControl("txtCantidadProductos") as TextBox).Text);
 
 
+    }
+
+    private static string ReadSingleRow(IDataRecord record)
+    {
+        return String.Format("{0}", record[0]);
     }
 
 
